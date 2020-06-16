@@ -10,19 +10,31 @@ const refs = {
 
 refs.input.addEventListener('change', changeTheme);
 
+const classTheme = refs.body.classList;
+
 function changeTheme(event) {
-  const classTheme = refs.body.classList;
   if (event.target.checked) {
-    classTheme.add(Theme.DARK);
-    classTheme.remove(Theme.LIGHT);
-    localStorage.setItem('theme', Theme.DARK);
+    checkTheme('LIGHT', 'DARK');
   } else {
-    classTheme.add(Theme.LIGHT);
-    classTheme.remove(Theme.DARK);
-    localStorage.setItem('theme', Theme.LIGHT);
+    checkTheme('DARK', 'LIGHT');
   }
 }
 
+function checkTheme(oldTheme, newTheme) {
+  classTheme.add(Theme[newTheme]);
+  classTheme.remove(Theme[oldTheme]);
+  localStorage.setItem('theme', Theme[newTheme]);
+}
+
 const savedTheme = localStorage.getItem('theme');
-refs.body.classList = savedTheme;
-savedTheme === Theme.DARK ? (refs.input.checked = true) : false;
+if (savedTheme === null) {
+  refs.body.classList = Theme.LIGHT;
+} else {
+  refs.body.classList = savedTheme;
+}
+
+if (savedTheme === Theme.DARK) {
+  refs.input.checked = true;
+} else {
+  refs.input.checked = false;
+}
